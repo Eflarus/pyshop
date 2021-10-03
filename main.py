@@ -1,5 +1,5 @@
-from mainframes import UserFrame, AdminFrame
-from loader import root_frame
+from mainframes import UserFrame, AdminFrame, EnterFrame
+from loader import root_frame, usermode
 
 
 def handle_focus_user(event):
@@ -8,13 +8,20 @@ def handle_focus_user(event):
 
 
 if __name__ == "__main__":
-    frame_mode = '1'
-    if frame_mode == '1':
-        app = UserFrame(root_frame)
-    elif frame_mode == '0':
+
+    EnterFrame(root_frame)
+    if usermode == 'Admin':
         app = AdminFrame(root_frame)
-    app.pack()
-    root_frame.bind("<FocusIn>", handle_focus_user)
+        app.pack()
+        root_frame.bind("<FocusIn>", handle_focus_user)
+    elif usermode == 'Customer':
+        app = UserFrame(root_frame)
+        app.pack()
+        root_frame.bind("<FocusIn>", handle_focus_user)
+    elif usermode == 'Picker':
+        app = UserFrame(root_frame)
+        app.pack()
+
     root_frame.title("Shop")
     root_frame.geometry("590x450+300+200")
     root_frame.resizable(False, False)
