@@ -53,19 +53,19 @@ class UsersDB:
     def __init__(self):
         self.conn = sqlite3.connect('users.db')
         self.c = self.conn.cursor()
-        self.c.execute('''CREATE TABLE IF NOT EXISTS user (username TEXT NOT NULL PRIMARY KEY,password TEX NOT NULL, 
+        self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEX NOT NULL, 
         role TEXT NOT NULL);''')
         self.conn.commit()
 
     def find_user_db(self, username, password):
-        self.c.execute('''SELECT * FROM user WHERE username = ? and password = ?''', (username, password))
+        self.c.execute('''SELECT * FROM users WHERE username = ? and password = ?''', (username, password))
 
     def create_user_db(self, username, password, role):
-        self.c.execute('''INSERT INTO user(username,password, role) VALUES(?,?,?)''', (username, password, role))
+        self.c.execute('''INSERT INTO users(username,password, role) VALUES(?,?,?)''', (username, password, role))
         self.conn.commit()
 
     def find_username_db(self, username):
-        self.c.execute('''SELECT username FROM user WHERE username = ?''', (username,))
+        self.c.execute('''SELECT username FROM users WHERE username = ?''', (username,))
 
     def find_usermode_db(self, username):
-        self.c.execute('''SELECT role FROM user WHERE username = ?''', (username,))
+        self.c.execute('''SELECT role FROM users WHERE username = ?''', (username,))

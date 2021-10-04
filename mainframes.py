@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from buttons import *
-from loader import gdb, udb, usermode
+from loader import gdb, udb
 
 
 
 class MainFrame(tk.Frame):
     def __init__(self, root_frame):
         super().__init__(root_frame)
+        print('mf 11')
         self.tree = ttk.Treeview(self)
         self.db = gdb
         self.toolbar = tk.Frame(bg='#d7d8e0', bd=2)
@@ -27,10 +28,11 @@ class MainFrame(tk.Frame):
 class AdminFrame(MainFrame):
     def __init__(self, root_frame):
         super().__init__(root_frame)
+        self.scroll = tk.Scrollbar(self, command=self.tree.yview)
         self.tree = ttk.Treeview(self, columns=('ID', 'description', 'costs'),
                                  height=15, show='headings', selectmode="browse")
         self.init_user()
-        self.scroll = tk.Scrollbar(self, command=self.tree.yview)
+
 
     def init_user(self):
         add_button = AddButton(self)
@@ -47,7 +49,6 @@ class AdminFrame(MainFrame):
         self.tree.heading('costs', text='Price')
 
         self.tree.pack(side=tk.LEFT)
-
         self.scroll.pack(side=tk.LEFT, fill=tk.Y)
         self.tree.configure(yscrollcommand=self.scroll.set)
 

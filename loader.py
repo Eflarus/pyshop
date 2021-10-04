@@ -1,7 +1,11 @@
 import tkinter as tk
 from db import GoodsDB, UsersDB
 
-root_frame = tk.Tk()
 gdb = GoodsDB()
 udb = UsersDB()
-usermode = ''
+
+root_frame = tk.Tk()
+
+root_frame.resizable(False, False)
+
+
