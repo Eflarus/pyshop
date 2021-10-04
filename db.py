@@ -6,8 +6,10 @@ class GoodsDB:
         self.conn = sqlite3.connect('goods.db')
         self.c = self.conn.cursor()
         self.c.execute(
-            '''CREATE TABLE IF NOT EXISTS goods (id integer primary key, description text, costs real, cart text)''')
+            '''CREATE TABLE IF NOT EXISTS goods (id INTEGER PRIMARY KEY, description TEXT NOT NULL, costs REAL NOT 
+            NULL, cart TEXT)''')
         self.conn.commit()
+        self.clean_cart_db()
 
     def insert_data_db(self, description, cost):
         self.c.execute('''INSERT INTO goods(description, costs, cart) VALUES (?, ?, ?)''',
@@ -44,6 +46,11 @@ class GoodsDB:
     def default_data_db(self, sel_id):
         self.c.execute('''SELECT * FROM goods WHERE id=?''', (sel_id,))
         print(sel_id, 'edd')
+
+    def clean_cart_db(self):
+        self.c.execute('''UPDATE goods SET cart = "No"''')
+        self.conn.commit()
+        print('cart clean')
 
 
 class UsersDB:

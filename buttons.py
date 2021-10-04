@@ -1,6 +1,3 @@
-import tkinter as tk
-
-import goodframes
 from goodframes import *
 
 
@@ -95,6 +92,16 @@ class ShowCartButton(DefaultButton):
         super().__init__(frame.toolbar,
                          text='Show Cart',
                          command=lambda: frame.show_cart(),
+                         image=self.img)
+
+
+class DelCartButton(DefaultButton):
+    def __init__(self, frame):
+        self.img = tk.PhotoImage(file='def.gif')
+        self.frame = frame
+        super().__init__(frame.toolbar,
+                         text='Clean Cart',
+                         command=lambda: clean_cart(),
                          image=self.img)
 
 

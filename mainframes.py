@@ -1,11 +1,4 @@
-import tkinter as tk
-from tkinter import ttk
-
-import self as self
-
 from buttons import *
-from loader import gdb, udb
-
 
 
 class MainFrame(tk.Frame):
@@ -31,13 +24,13 @@ class MainFrame(tk.Frame):
         selected = self.tree.focus()
         return self.tree.item(selected, 'values')[0]
 
+
 class AdminFrame(MainFrame):
     def __init__(self, root_frame):
         super().__init__(root_frame)
 
         self.tree = ttk.Treeview(self, columns=('ID', 'description', 'costs'),
                                  height=15, show='headings', selectmode="browse")
-
         self.scroll = tk.Scrollbar(self, command=self.tree.yview)
         self.init_user()
 
@@ -75,6 +68,7 @@ class UserFrame(MainFrame):
         add_to_cart_button = AddToCartButton(self)
         rm_from_cart_button = RmFromCartButton(self)
         cart_button = ShowCartButton(self)
+        del_cart_button = DelCartButton(self)
         update_button = UpdateButton(self)
 
         self.tree.column('ID', width=50, anchor=tk.CENTER)
@@ -96,5 +90,7 @@ class UserFrame(MainFrame):
         self.db.show_cart_db()
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]
+
+
 
 
