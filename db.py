@@ -37,10 +37,6 @@ class GoodsDB:
         self.conn.commit()
         print(sel_id, 'deld')
 
-    # def search_records_db(self, description):
-    #     description = ('%' + description + '%',)
-    #     self.c.execute('''SELECT * FROM goods WHERE description LIKE ?''', description)
-
     def show_cart_db(self):
         description = ('%In Cart%',)
         self.c.execute('''SELECT * FROM goods WHERE cart LIKE ?''', description)
@@ -48,6 +44,7 @@ class GoodsDB:
     def default_data_db(self, sel_id):
         self.c.execute('''SELECT * FROM goods WHERE id=?''', (sel_id,))
         print(sel_id, 'edd')
+
 
 class UsersDB:
     def __init__(self):

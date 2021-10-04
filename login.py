@@ -51,7 +51,7 @@ class EnterFrame:
         self.register_frame()
 
     def register_frame(self):
-        head = tk.Label(self.regfr, text='Create New User',font = ('',35),pady = 10)
+        head = tk.Label(self.regfr, text='REGISTRATION',font = ('',35),pady = 10)
         head.grid(row=0, column=0, columnspan=2)
         lbl_unm = tk.Label(self.regfr, text='Username: ')
         lbl_unm.grid(row=1, column=0, padx=20, pady=10)
@@ -65,7 +65,7 @@ class EnterFrame:
         self.entry_password.grid(row=2, column=1, padx=20, pady=10)
         self.cbox_umode = ttk.Combobox(self.regfr, state="readonly", values=[u'Admin', u'Customer', u'Picker'])
         self.cbox_umode.grid(row=3, column=1, padx=20, pady=10)
-        self.cbox_umode.current(0)
+        self.cbox_umode.current(1)
         button_register = ttk.Button(self.regfr,
                                      text='Create Account',
                                      command=lambda: self.register(
