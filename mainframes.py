@@ -31,7 +31,6 @@ class MainFrame(tk.Frame):
         selected = self.tree.focus()
         return self.tree.item(selected, 'values')[0]
 
-
 class AdminFrame(MainFrame):
     def __init__(self, root_frame):
         super().__init__(root_frame)
