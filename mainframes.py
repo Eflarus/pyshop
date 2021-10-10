@@ -92,5 +92,41 @@ class UserFrame(MainFrame):
         [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]
 
 
+class PickerFrame(MainFrame):
+    def __init__(self, root_frame):
+        super().__init__(root_frame)
+        self.db = odb
+        self.tree = ttk.Treeview(self, columns=('ID', 'Client', 'Goods', 'Status'),
+                                 height=15, show='headings', selectmode="browse")
+        self.scroll = tk.Scrollbar(self, command=self.tree.yview)
+        self.init_user()
+
+    def init_user(self):
+        self.view_data()
+        change_state_button = ChangeStateButton(self)
+        # delete_order_button = DelOrderButton(self)
+        # show_order_button = ShowOrderButton(self)
+        update_button = UpdateButton(self)
+
+        self.tree.column('ID', width=50, anchor=tk.CENTER)
+        self.tree.column('Client', width=50, anchor=tk.CENTER)
+        self.tree.column('Goods', width=100, anchor=tk.CENTER)
+        self.tree.column('Status', width=50, anchor=tk.CENTER)
+
+        self.tree.heading('ID', text='ID')
+        self.tree.heading('Client', text='Client')
+        self.tree.heading('Goods', text='Goods IDs')
+        self.tree.heading('Status', text='Status')
+
+        self.tree.pack(side=tk.LEFT)
+
+        self.scroll.pack(side=tk.LEFT, fill=tk.Y)
+        self.tree.configure(yscrollcommand=self.scroll.set)
+
+    # def show_cart(self):
+    #     self.db.show_cart_db()
+    #     [self.tree.delete(i) for i in self.tree.get_children()]
+    #     [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]
+
 
 

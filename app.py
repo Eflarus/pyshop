@@ -1,8 +1,5 @@
-from mainframes import UserFrame, AdminFrame
+from mainframes import UserFrame, AdminFrame, PickerFrame
 from loader import root_frame
-
-
-
 
 
 def run_app(usermode, username):
@@ -19,7 +16,7 @@ def run_app(usermode, username):
 
     elif usermode == 'Picker':
         root_frame.title(f"Shop: Picker {username}")
-        app = UserFrame(root_frame)
+        app = PickerFrame(root_frame)
         app.pack()
 
     root_frame.mainloop()

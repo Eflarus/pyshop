@@ -119,7 +119,20 @@ class OrderButton(DefaultButton):
         except:
             pass
 
+class ChangeStateButton(DefaultButton):
+    def __init__(self, frame):
+        self.img = tk.PhotoImage(file='def.gif')
+        self.frame = frame
+        super().__init__(frame.toolbar,
+                         text='Change Status',
+                         command=lambda: self.safe_change(),
+                         image=self.img)
 
+    def safe_change(self):
+        try:
+            ChangeStatusFrame(self.frame.get_sel_id())
+        except:
+            pass
 
 class UpdateButton(DefaultButton):
     def __init__(self, frame):
