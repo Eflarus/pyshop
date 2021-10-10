@@ -1,5 +1,5 @@
 from tkinter import ttk
-from loader import gdb, tk
+from loader import gdb, tk, odb
 from tkinter import messagebox as ms
 
 
@@ -35,7 +35,7 @@ class AddFrame(tk.Toplevel):
     def safe_set(self, event):
         descr = self.entry_description.get()
         price = self.entry_money.get()
-        if descr=='' or price=='':
+        if descr == '' or price == '':
             ms.showerror('Oops!', 'All fields are required to set!')
         else:
             try:
@@ -115,6 +115,7 @@ class RmFromCartFrame(DelFrame):
         self.btn_ok.bind('<Button-1>', lambda event: [self.db.rm_from_cart_db(self.sel_id),
                                                       self.destroy()])
 
+
 class clean_cart(DelFrame):
     def __init__(self):
         super().__init__(0)
@@ -124,3 +125,67 @@ class clean_cart(DelFrame):
         self.btn_ok = ttk.Button(self, text='Clean')
         self.btn_ok.bind('<Button-1>', lambda event: [self.db.clean_cart_db(),
                                                       self.destroy()])
+
+
+class OrderFrame(tk.Toplevel):
+    def __init__(self, username):
+        super().__init__()
+        self.db = gdb
+        self.odb = odb
+        self.init_child()
+        self.username = username
+
+        self.goods_ids = ''
+        self.goods_names = ''
+        self.total = 0
+
+        self.order_info()
+        self.widgets()
+
+        self.grab_set()
+        self.focus_set()
+
+    def order_info(self):
+        self.db.show_cart_db()
+        rows = self.db.c.fetchall()
+        names, ids = [], []
+        for row in rows:
+            print(row[0], row[1], row[2])
+            ids.append(row[0])
+            names.append(row[1])
+            self.total += row[2]
+        self.goods_names = ", ".join(names)
+        self.goods_ids = ", ".join(str(e) for e in ids)
+        print(self.goods_ids, self.goods_names)
+
+    def init_child(self):
+        self.title('Order')
+        self.geometry('+900+500')
+        self.resizable(False, False)
+        self.btn_ok = ttk.Button(self, text='Order')
+
+    def widgets(self):
+        self.label_goods = tk.Label(self, text='Goods in Cart:')
+        self.label_goods_list = tk.Label(self, text=self.goods_names)
+        self.label_total = tk.Label(self, text='Total:')
+        self.label_total_value = tk.Label(self, text=f'${self.total}')
+        self.btn_cancel = ttk.Button(self, text='Cancel', command=self.destroy)
+        self.label_goods.grid(row=0, column=0, padx=20, pady=10, columnspan=2)
+        self.label_goods_list.grid(row=1, column=0, padx=20, pady=10, columnspan=2)
+        self.label_total.grid(row=2, column=0, padx=20, pady=10)
+        self.label_total_value.grid(row=2, column=1, padx=20, pady=10)
+        self.btn_cancel.grid(row=3, column=1, padx=30, pady=10)
+        self.btn_ok.grid(row=3, column=0, padx=30, pady=10)
+        self.btn_ok.bind('<Button-1>', self.safe_order)
+
+    def safe_order(self, event):
+        if self.goods_names=='':
+            ms.showerror('Oops!', 'Cart is empty!')
+        else:
+            try:
+                self.odb.create_order_db(self.username, self.goods_ids, self.total)
+                self.destroy()
+            except:
+                ms.showerror('Oops!', 'Something incorrect!')
+
+

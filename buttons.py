@@ -105,6 +105,22 @@ class DelCartButton(DefaultButton):
                          image=self.img)
 
 
+class OrderButton(DefaultButton):
+    def __init__(self, frame):
+        self.img = tk.PhotoImage(file='def.gif')
+        super().__init__(frame.toolbar,
+                         text='Order',
+                         command=lambda: self.safe_order(frame),
+                         image=self.img)
+
+    def safe_order(self, frame):
+        try:
+            OrderFrame(frame.session_username)
+        except:
+            pass
+
+
+
 class UpdateButton(DefaultButton):
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='def.gif')

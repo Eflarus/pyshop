@@ -57,7 +57,7 @@ class UsersDB:
     def __init__(self):
         self.conn = sqlite3.connect('users.db')
         self.c = self.conn.cursor()
-        self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEX NOT NULL, 
+        self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEXT NOT NULL, 
         role TEXT NOT NULL);''')
         self.conn.commit()
 
@@ -73,3 +73,30 @@ class UsersDB:
 
     def find_usermode_db(self, username):
         self.c.execute('''SELECT role FROM users WHERE username = ?''', (username,))
+
+class OrdersDB:
+    def __init__(self):
+        self.conn = sqlite3.connect('orders.db')
+        self.c = self.conn.cursor()
+        self.c.execute('''CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, username TEXT NOT NULL, 
+        goods_ids TEXT NOT NULL, score REAL NOT NULL, state TEXT NOT NULL);''')
+        self.conn.commit()
+
+    def view_data_db(self):
+        self.c.execute('''SELECT * FROM orders''')
+
+    def get_orders_db(self, username):
+        self.c.execute('''SELECT * FROM orders WHERE username = ? ''', (username,))
+
+    def create_order_db(self, username, goods_ids, score):
+        self.c.execute('''INSERT INTO orders(username, goods_ids, score, state) VALUES(?,?,?,?)''',
+                       (username, goods_ids, score, 'Paid'))
+        self.conn.commit()
+
+    def update_order_state_db(self, order_id, state):
+        self.c.execute('''UPDATE orders SET state=? WHERE ID=?''', (state, order_id))
+
+    def delete_order_db(self, order_id):
+        self.c.execute('''DELETE FROM orders WHERE id=?''', (order_id,))
+        self.conn.commit()
+        print(order_id, ' order deld')

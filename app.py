@@ -5,20 +5,20 @@ from loader import root_frame
 
 
 
-def run_app(usermode):
+def run_app(usermode, username):
     print(usermode)
     if usermode == 'Admin':
-        root_frame.title("Shop: Admin")
+        root_frame.title(f"Shop: Admin {username}")
         app = AdminFrame(root_frame)
         app.pack()
 
     elif usermode == 'Customer':
-        root_frame.title("Shop")
-        app = UserFrame(root_frame)
+        root_frame.title(f"Shop: {username}")
+        app = UserFrame(root_frame, username)
         app.pack()
 
     elif usermode == 'Picker':
-        root_frame.title("Shop: Picker")
+        root_frame.title(f"Shop: Picker {username}")
         app = UserFrame(root_frame)
         app.pack()
 

@@ -28,7 +28,6 @@ class MainFrame(tk.Frame):
 class AdminFrame(MainFrame):
     def __init__(self, root_frame):
         super().__init__(root_frame)
-
         self.tree = ttk.Treeview(self, columns=('ID', 'description', 'costs'),
                                  height=15, show='headings', selectmode="browse")
         self.scroll = tk.Scrollbar(self, command=self.tree.yview)
@@ -55,9 +54,9 @@ class AdminFrame(MainFrame):
 
 
 class UserFrame(MainFrame):
-    def __init__(self, root_frame):
+    def __init__(self, root_frame, username):
         super().__init__(root_frame)
-
+        self.session_username = username
         self.tree = ttk.Treeview(self, columns=('ID', 'description', 'costs', 'cart'),
                                  height=15, show='headings', selectmode="browse")
         self.scroll = tk.Scrollbar(self, command=self.tree.yview)
@@ -69,6 +68,7 @@ class UserFrame(MainFrame):
         rm_from_cart_button = RmFromCartButton(self)
         cart_button = ShowCartButton(self)
         del_cart_button = DelCartButton(self)
+        order_button = OrderButton(self)
         update_button = UpdateButton(self)
 
         self.tree.column('ID', width=50, anchor=tk.CENTER)

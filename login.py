@@ -42,7 +42,7 @@ class EnterFrame:
             usermode = self.set_usermode(username)
             print('login destroy', f'with {usermode} mode')
             self.logfr.pack_forget()
-            run_app(usermode)
+            run_app(usermode, username)
         else:
             ms.showerror('Oops!', 'Username or Password Not Found.')
 
@@ -88,7 +88,7 @@ class EnterFrame:
             usermode = self.set_usermode(username)
             print('reg destroy', f'with {usermode} mode')
             self.regfr.pack_forget()
-            run_app(usermode)
+            run_app(usermode, username)
 
     def reg_to_log(self):
         self.regfr.pack_forget()
