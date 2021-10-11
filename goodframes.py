@@ -156,6 +156,7 @@ class OrderFrame(tk.Toplevel):
             self.total += row[2]
         self.goods_names = ", ".join(names)
         self.goods_ids = ", ".join(str(e) for e in ids)
+        self.total = round(self.total, 2)
         print(self.goods_ids, self.goods_names)
 
     def init_child(self):
@@ -179,15 +180,15 @@ class OrderFrame(tk.Toplevel):
         self.btn_ok.bind('<Button-1>', self.safe_order)
 
     def safe_order(self, event):
-        if self.goods_names=='':
+        if self.goods_names == '':
             ms.showerror('Oops!', 'Cart is empty!')
         else:
             try:
                 self.odb.create_order_db(self.username, self.goods_ids, self.total)
+                self.db.clean_cart_db()
                 self.destroy()
             except:
                 ms.showerror('Oops!', 'Something incorrect!')
-
 
 
 class ChangeStatusFrame(tk.Toplevel):
@@ -195,49 +196,85 @@ class ChangeStatusFrame(tk.Toplevel):
         super().__init__()
         self.sel_id = sel_id
         self.db = odb
+
+        self.default_data()
         self.init_child()
-        self.geometry('+900+500')
-        self.resizable(False, False)
+        self.title('Order Status')
         self.widgets()
+        self.geometry('+300+500')
+        self.resizable(False, False)
         self.grab_set()
         self.focus_set()
-        self.default_data()
 
     def init_child(self):
-        self.title('Order Status')
+        self.label_uid = tk.Label(self, text=f'Client ID: {self.client_id}')
+        self.cbox_state = ttk.Combobox(self, state="readonly", values=[u'Paid', u'Sent'])
+        self.label_state = tk.Label(self, text='Order Status:')
+        self.label_goods = tk.Label(self, text=f'Goods in order: {self.goods}')
+        self.btn_cancel = ttk.Button(self, text='Cancel', command=self.destroy)
         self.btn_ok = ttk.Button(self, text='Update')
 
     def default_data(self):
         self.db.default_data_db(self.sel_id)
         row = self.db.c.fetchone()
-        self.entry_description.insert(0, row[1])
-        self.entry_money.insert(0, row[2])
+        self.client_id = row[1]
+        self.goods = row[2]
+        self.state = row[4]
 
     def widgets(self):
-        self.label_sum = tk.Label(self, text='Price:')
-        self.label_description = tk.Label(self, text='Description:')
-        self.btn_cancel = ttk.Button(self, text='Cancel', command=self.destroy)
-        self.entry_money = ttk.Entry(self)
-        self.entry_description = ttk.Entry(self)
-        self.label_description.grid(row=0, column=0, padx=20, pady=10)
-        self.label_sum.grid(row=1, column=0, padx=20, pady=10)
-        self.entry_description.grid(row=0, column=1, padx=20, pady=10)
-        self.entry_money.grid(row=1, column=1, padx=20, pady=10)
-        self.btn_cancel.grid(row=2, column=1, padx=30, pady=10)
-        self.btn_ok.grid(row=2, column=0, padx=30, pady=10)
-        self.btn_ok.bind('<Button-1>', self.safe_set)
-    #
-    # def safe_set(self, event):
-    #     descr = self.entry_description.get()
-    #     price = self.entry_money.get()
-    #     if descr == '' or price == '':
-    #         ms.showerror('Oops!', 'All fields are required to set!')
-    #     else:
-    #         try:
-    #             self.try_set(descr, price)
-    #             self.destroy()
-    #         except:
-    #             ms.showerror('Oops!', 'Price must be numeric!')
-    #
-    # def try_set(self, descr, price):
-    #     self.db.insert_data_db(descr, float(price))
+        self.cbox_state.current(0)
+        self.label_uid.grid(row=0, column=0, padx=20, pady=10, columnspan=2)
+        self.label_goods.grid(row=1, column=0, padx=20, pady=10, columnspan=2)
+        self.label_state.grid(row=3, column=0, padx=20, pady=10)
+        self.cbox_state.grid(row=3, column=1, padx=20, pady=10)
+        self.btn_ok.grid(row=4, column=0, padx=20, pady=10)
+        self.btn_cancel.grid(row=4, column=1, padx=20, pady=10)
+        self.btn_ok.bind('<Button-1>', lambda event: [self.db.update_order_state_db(self.sel_id, self.cbox_state.get()),
+                                                      self.destroy()])
+
+
+class RmOrderFrame(DelFrame):
+    def __init__(self, sel_id):
+        super().__init__(sel_id)
+        self.db = odb
+        self.title('Order-')
+
+    def ok_button(self):
+        self.btn_ok = ttk.Button(self, text='Delete')
+        self.btn_ok.bind('<Button-1>', lambda event: [self.db.delete_order_db(self.sel_id),
+                                                      self.destroy()])
+
+
+class ShowOrdersFrame(tk.Toplevel):
+    def __init__(self, uid):
+        super().__init__()
+        self.uid = uid
+        self.db = odb
+        self.tree = ttk.Treeview(self, columns=('ID', 'total', 'state'),
+                                 height=15, show='headings', selectmode="browse")
+        self.scroll = tk.Scrollbar(self, command=self.tree.yview)
+        self.init_child()
+        self.title("My Orders")
+        self.geometry('225x150+300+300')
+        self.resizable(False, False)
+        self.grab_set()
+        self.focus_set()
+
+    def init_child(self):
+        self.get_data_by_user()
+
+        self.tree.column('ID', width=75, anchor=tk.CENTER)
+        self.tree.column('total', width=77, anchor=tk.CENTER)
+        self.tree.column('state', width=50, anchor=tk.CENTER)
+
+        self.tree.heading('ID', text='Order ID')
+        self.tree.heading('total', text='Total $')
+        self.tree.heading('state', text='Status')
+        self.tree.pack(side=tk.LEFT)
+        self.scroll.pack(side=tk.LEFT, fill=tk.Y)
+        self.tree.configure(yscrollcommand=self.scroll.set)
+
+    def get_data_by_user(self):
+        self.db.get_orders__by_username_db(self.uid)
+        [self.tree.delete(i) for i in self.tree.get_children()]
+        [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]

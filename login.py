@@ -4,6 +4,7 @@ from loader import udb
 from tkinter import messagebox as ms
 from app import run_app
 
+
 class EnterFrame:
     def __init__(self, frame):
         self.frame = frame

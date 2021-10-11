@@ -85,8 +85,12 @@ class OrdersDB:
     def view_data_db(self):
         self.c.execute('''SELECT * FROM orders''')
 
-    def get_orders_db(self, username):
-        self.c.execute('''SELECT * FROM orders WHERE username = ? ''', (username,))
+    def get_orders__by_username_db(self, username):
+        self.c.execute('''SELECT ID, SCORE, STATE FROM orders WHERE username = ? ''', (username,))
+
+    def default_data_db(self, sel_id):
+        self.c.execute('''SELECT * FROM orders WHERE id=?''', (sel_id,))
+        print(sel_id, 'getinfo')
 
     def create_order_db(self, username, goods_ids, score):
         self.c.execute('''INSERT INTO orders(username, goods_ids, score, state) VALUES(?,?,?,?)''',
@@ -95,6 +99,7 @@ class OrdersDB:
 
     def update_order_state_db(self, order_id, state):
         self.c.execute('''UPDATE orders SET state=? WHERE ID=?''', (state, order_id))
+        self.conn.commit()
 
     def delete_order_db(self, order_id):
         self.c.execute('''DELETE FROM orders WHERE id=?''', (order_id,))

@@ -14,7 +14,7 @@ class DefaultButton(tk.Frame):
 
 class AddButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/add.png')
         super().__init__(toolbar=frame.toolbar,
                          text='Add Good',
                          command=AddFrame,
@@ -23,7 +23,7 @@ class AddButton(DefaultButton):
 
 class DelButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/rm.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Delete Good',
@@ -39,7 +39,7 @@ class DelButton(DefaultButton):
 
 class EditGoodButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/edit.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Edit Good',
@@ -55,7 +55,7 @@ class EditGoodButton(DefaultButton):
 
 class AddToCartButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/add-cart.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Add to Cart',
@@ -71,7 +71,7 @@ class AddToCartButton(DefaultButton):
 
 class RmFromCartButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/rm-cart.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Remove from Cart',
@@ -87,7 +87,7 @@ class RmFromCartButton(DefaultButton):
 
 class ShowCartButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/show-cart.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Show Cart',
@@ -97,7 +97,7 @@ class ShowCartButton(DefaultButton):
 
 class DelCartButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/clean-cart.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Clean Cart',
@@ -107,11 +107,12 @@ class DelCartButton(DefaultButton):
 
 class OrderButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/order.png')
         super().__init__(frame.toolbar,
                          text='Order',
                          command=lambda: self.safe_order(frame),
-                         image=self.img)
+                         image=self.img,
+                         side='r')
 
     def safe_order(self, frame):
         try:
@@ -119,9 +120,20 @@ class OrderButton(DefaultButton):
         except:
             pass
 
+
+class ShowOrdersButton(DefaultButton):
+    def __init__(self, frame):
+        self.img = tk.PhotoImage(file='icons/sent.png')
+        super().__init__(frame.toolbar,
+                         text='My Orders',
+                         command=lambda: ShowOrdersFrame(frame.session_username),
+                         image=self.img,
+                         side='r')
+
+
 class ChangeStateButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/change.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Change Status',
@@ -134,11 +146,28 @@ class ChangeStateButton(DefaultButton):
         except:
             pass
 
+
+class DelOrderButton(DefaultButton):
+    def __init__(self, frame):
+        self.img = tk.PhotoImage(file='icons/delete.png')
+        self.frame = frame
+        super().__init__(frame.toolbar,
+                         text='Delete Order',
+                         command=lambda: self.safe_del_order(),
+                         image=self.img)
+
+    def safe_del_order(self):
+        try:
+            RmOrderFrame(self.frame.get_sel_id())
+        except:
+            pass
+
+
 class UpdateButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='def.gif')
+        self.img = tk.PhotoImage(file='icons/updating.png')
         super().__init__(frame.toolbar,
-                         text='Home',
+                         text='Refresh',
                          command=lambda: frame.view_data(),
                          image=self.img,
                          side='r')
