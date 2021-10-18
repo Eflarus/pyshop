@@ -133,7 +133,7 @@ class ShowOrdersButton(DefaultButton):
 
 class ChangeStateButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='icons/change.png')
+        self.img = tk.PhotoImage(file='icons/edit.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Change Status',
@@ -149,7 +149,7 @@ class ChangeStateButton(DefaultButton):
 
 class DelOrderButton(DefaultButton):
     def __init__(self, frame):
-        self.img = tk.PhotoImage(file='icons/delete.png')
+        self.img = tk.PhotoImage(file='icons/rm.png')
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Delete Order',

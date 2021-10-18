@@ -1,14 +1,32 @@
 import sqlite3
 
-
-class GoodsDB:
+class ShopDB:
     def __init__(self):
-        self.conn = sqlite3.connect('goods.db')
+        self.conn = sqlite3.connect('shop.db')
         self.c = self.conn.cursor()
+        self.create_goods_db()
+        self.create_users_db()
+        self.create_orders_db()
+
+    def create_goods_db(self):
         self.c.execute(
             '''CREATE TABLE IF NOT EXISTS goods (id INTEGER PRIMARY KEY, description TEXT NOT NULL, costs REAL NOT 
             NULL, cart TEXT)''')
         self.conn.commit()
+
+    def create_users_db(self):
+        self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEXT NOT NULL, 
+                role TEXT NOT NULL);''')
+        self.conn.commit()
+
+    def create_orders_db(self):
+        self.c.execute('''CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, username TEXT NOT NULL, 
+                goods_ids TEXT NOT NULL, score REAL NOT NULL, state TEXT NOT NULL);''')
+        self.conn.commit()
+
+class GoodsDB(ShopDB):
+    def __init__(self):
+        super().__init__()
         self.clean_cart_db()
 
     def insert_data_db(self, description, cost):
@@ -17,18 +35,15 @@ class GoodsDB:
         self.conn.commit()
 
     def edit_record_db(self, description, cost, sel_id):
-        self.c.execute('''UPDATE goods SET description=?, costs=? WHERE ID=?''',
-                       (description, cost, sel_id))
+        self.c.execute('''UPDATE goods SET description=?, costs=? WHERE ID=?''', (description, cost, sel_id))
         self.conn.commit()
 
     def add_to_cart_db(self, sel_id):
-        self.c.execute('''UPDATE goods SET cart=? WHERE ID=?''',
-                       ('In Cart', sel_id))
+        self.c.execute('''UPDATE goods SET cart=? WHERE ID=?''', ('In Cart', sel_id))
         self.conn.commit()
 
     def rm_from_cart_db(self, sel_id):
-        self.c.execute('''UPDATE goods SET cart=? WHERE ID=?''',
-                       ('No', sel_id))
+        self.c.execute('''UPDATE goods SET cart=? WHERE ID=?''', ('No', sel_id))
         self.conn.commit()
 
     def view_data_db(self):
@@ -53,13 +68,9 @@ class GoodsDB:
         print('cart clean')
 
 
-class UsersDB:
+class UsersDB(ShopDB):
     def __init__(self):
-        self.conn = sqlite3.connect('users.db')
-        self.c = self.conn.cursor()
-        self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEXT NOT NULL, 
-        role TEXT NOT NULL);''')
-        self.conn.commit()
+        super().__init__()
 
     def find_user_db(self, username, password):
         self.c.execute('''SELECT * FROM users WHERE username = ? and password = ?''', (username, password))
@@ -74,13 +85,9 @@ class UsersDB:
     def find_usermode_db(self, username):
         self.c.execute('''SELECT role FROM users WHERE username = ?''', (username,))
 
-class OrdersDB:
+class OrdersDB(ShopDB):
     def __init__(self):
-        self.conn = sqlite3.connect('orders.db')
-        self.c = self.conn.cursor()
-        self.c.execute('''CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, username TEXT NOT NULL, 
-        goods_ids TEXT NOT NULL, score REAL NOT NULL, state TEXT NOT NULL);''')
-        self.conn.commit()
+        super().__init__()
 
     def view_data_db(self):
         self.c.execute('''SELECT * FROM orders''')
