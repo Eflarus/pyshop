@@ -22,5 +22,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\Duke\PycharmProjects\pyshop\orders.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="shop" uuid="86abba73-f9fe-47b6-bc55-7696b0fe6b1f">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\Duke\PycharmProjects\pyshop\shop.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -1,22 +1,32 @@
 from mainframes import UserFrame, AdminFrame, PickerFrame
-from loader import root_frame
+from loader import root_frame, udb
 
 
-def run_app(usermode, username):
-    print(usermode)
-    if usermode == 'Admin':
-        root_frame.title(f"Shop: Admin {username}")
-        app = AdminFrame(root_frame)
-        app.pack()
+class RunApp:
+    def __init__(self, username):
+        self.db = udb
+        self.username = username
+        self.set_usermode()
+        self.run_app()
 
-    elif usermode == 'Customer':
-        root_frame.title(f"Shop: {username}")
-        app = UserFrame(root_frame, username)
-        app.pack()
+    def run_app(self):
+        print(self.usermode, 'qq')
+        if self.usermode == 'Admin':
+            root_frame.title(f"Shop: Admin {self.username}")
+            app = AdminFrame(root_frame)
+            app.pack()
 
-    elif usermode == 'Picker':
-        root_frame.title(f"Shop: Picker {username}")
-        app = PickerFrame(root_frame)
-        app.pack()
+        elif self.usermode == 'Customer':
+            root_frame.title(f"Shop: {self.username}")
+            app = UserFrame(root_frame, self.username)
+            app.pack()
 
-    root_frame.mainloop()
+        elif self.usermode == 'Picker':
+            root_frame.title(f"Shop: Picker {self.username}")
+            app = PickerFrame(root_frame)
+            app.pack()
+
+    def set_usermode(self):
+        self.db.find_usermode_db(self.username)
+        self.usermode = self.db.c.fetchone()[0]
+

@@ -1,25 +1,26 @@
 import sqlite3
 
+
 class ShopDB:
     def __init__(self):
         self.conn = sqlite3.connect('shop.db')
         self.c = self.conn.cursor()
-        self.create_goods_db()
-        self.create_users_db()
-        self.create_orders_db()
+        self._create_goods_db()
+        self._create_users_db()
+        self._create_orders_db()
 
-    def create_goods_db(self):
+    def _create_goods_db(self):
         self.c.execute(
             '''CREATE TABLE IF NOT EXISTS goods (id INTEGER PRIMARY KEY, description TEXT NOT NULL, costs REAL NOT 
             NULL, cart TEXT)''')
         self.conn.commit()
 
-    def create_users_db(self):
+    def _create_users_db(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY,password TEXT NOT NULL, 
                 role TEXT NOT NULL);''')
         self.conn.commit()
 
-    def create_orders_db(self):
+    def _create_orders_db(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, username TEXT NOT NULL, 
                 goods_ids TEXT NOT NULL, score REAL NOT NULL, state TEXT NOT NULL);''')
         self.conn.commit()

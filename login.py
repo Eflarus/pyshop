@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from loader import udb
 from tkinter import messagebox as ms
-from app import run_app
+from app import RunApp
 
 
 class EnterFrame:
@@ -18,7 +18,7 @@ class EnterFrame:
         self.frame.mainloop()
 
     def login_frame(self):
-        head = tk.Label(self.logfr, text='LOGIN',font = ('',35),pady = 10)
+        head = tk.Label(self.logfr, text='LOGIN', font=('', 35), pady=10)
         head.grid(row=0, column=0, columnspan=2)
         label_username = tk.Label(self.logfr, text='Username: ')
         label_username.grid(row=1, column=0, padx=20, pady=10)
@@ -29,8 +29,7 @@ class EnterFrame:
         self.entry_password = ttk.Entry(self.logfr)
         self.entry_password.grid(row=2, column=1, padx=20, pady=10)
         button_login = ttk.Button(self.logfr, text='Enter',
-                                  command=lambda: self.login(
-                                      self.entry_username.get(), self.entry_password.get()))
+                                  command=lambda: self.login(self.entry_username.get(), self.entry_password.get()))
         button_login.grid(row=3, column=0, padx=20, pady=10)
         button_register = ttk.Button(self.logfr, text='Register', command=self.log_to_reg)
         button_register.grid(row=3, column=1, padx=20, pady=10)
@@ -40,10 +39,9 @@ class EnterFrame:
     def login(self, username, password):
         self.db.find_user_db(username, password)
         if self.db.c.fetchall():
-            usermode = self.set_usermode(username)
-            print('login destroy', f'with {usermode} mode')
+            print('login destroy')
             self.logfr.pack_forget()
-            run_app(usermode, username)
+            RunApp(username)
         else:
             ms.showerror('Oops!', 'Username or Password Not Found.')
 
@@ -52,7 +50,7 @@ class EnterFrame:
         self.register_frame()
 
     def register_frame(self):
-        head = tk.Label(self.regfr, text='REGISTRATION',font = ('',35),pady = 10)
+        head = tk.Label(self.regfr, text='REGISTRATION', font=('', 35),padx=5, pady=10)
         head.grid(row=0, column=0, columnspan=2)
         lbl_unm = tk.Label(self.regfr, text='Username: ')
         lbl_unm.grid(row=1, column=0, padx=20, pady=10)
@@ -80,22 +78,16 @@ class EnterFrame:
         self.db.find_username_db(username)
         if self.db.c.fetchall():
             ms.showerror('Oops!', 'Username already exists.')
-        elif password== '':
+        elif password == '':
             ms.showerror('Oops!', 'Password must be set')
-        elif username== '':
+        elif username == '':
             ms.showerror('Oops!', 'Username must be set')
         else:
             self.db.create_user_db(username, password, umode)
-            usermode = self.set_usermode(username)
-            print('reg destroy', f'with {usermode} mode')
+            print('reg destroy')
             self.regfr.pack_forget()
-            run_app(usermode, username)
+            RunApp(username)
 
     def reg_to_log(self):
         self.regfr.pack_forget()
         self.login_frame()
-
-    def set_usermode(self, username):
-        self.db.find_usermode_db(username)
-        return self.db.c.fetchone()[0]
-
