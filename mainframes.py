@@ -2,30 +2,35 @@ from buttons import *
 
 
 class MainFrame(tk.Frame):
+    """Дефолтное окно интерфейса"""
     def __init__(self, root_frame):
         super().__init__(root_frame)
         self.root_frame = root_frame
         self.root_frame.bind("<FocusIn>", self.handle_focus_user)
-        self.tree = ttk.Treeview(self)
+        self.tree = ttk.Treeview(self)  #дерево отображения записей из бд
         self.db = gdb
         self.toolbar = tk.Frame(bg='#d7d8e0', bd=2)
         self.toolbar.pack(side=tk.TOP, fill=tk.X)
 
     def handle_focus_user(self, event):
+        """Обновление отображаемых данных при попадании фрейма в фокус"""
         if event.widget == self.root_frame:
             self.view_data()
 
     def view_data(self):
+        """"Передача записей из бд товаров в дерево отображения"""
         self.db.view_data_db()
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]
 
     def get_sel_id(self):
+        """Получение id выбранной записи"""
         selected = self.tree.focus()
         return self.tree.item(selected, 'values')[0]
 
 
 class AdminFrame(MainFrame):
+    """Юзеринтерфейс админа"""
     def __init__(self, root_frame):
         super().__init__(root_frame)
         self.tree = ttk.Treeview(self, columns=('ID', 'description', 'costs'),
@@ -54,6 +59,7 @@ class AdminFrame(MainFrame):
 
 
 class UserFrame(MainFrame):
+    """Юзеринтерфейс покупателя"""
     def __init__(self, root_frame, username):
         super().__init__(root_frame)
         self.session_username = username
@@ -63,7 +69,6 @@ class UserFrame(MainFrame):
         self.init_user()
 
     def init_user(self):
-
         self.view_data()
         add_to_cart_button = AddToCartButton(self)
         rm_from_cart_button = RmFromCartButton(self)
@@ -89,12 +94,14 @@ class UserFrame(MainFrame):
         self.tree.configure(yscrollcommand=self.scroll.set)
 
     def show_cart(self):
+        """"Передача записей из бд товаров в корзине в дерево отображения"""
         self.db.show_cart_db()
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]
 
 
 class PickerFrame(MainFrame):
+    """Юзеринтерфейс кладовщика"""
     def __init__(self, root_frame):
         super().__init__(root_frame)
         self.db = odb

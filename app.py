@@ -3,6 +3,7 @@ from loader import root_frame, udb
 
 
 class RunApp:
+    """Класс вызова визуальных интерфейсов по ролям"""
     def __init__(self, username):
         self.db = udb
         self.username = username
@@ -17,7 +18,7 @@ class RunApp:
             app.pack()
 
         elif self.usermode == 'Customer':
-            root_frame.title(f"Shop: {self.username}")
+            root_frame.title(f"Shop: Customer {self.username}")
             app = UserFrame(root_frame, self.username)
             app.pack()
 
@@ -27,6 +28,7 @@ class RunApp:
             app.pack()
 
     def set_usermode(self):
+        """Получение юзермода по юзернейму из дб"""
         self.db.find_usermode_db(self.username)
         self.usermode = self.db.c.fetchone()[0]
 

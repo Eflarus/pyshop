@@ -4,6 +4,7 @@ from tkinter import messagebox as ms
 
 
 class AddFrame(tk.Toplevel):
+    """Окно добавления товара"""
     def __init__(self):
         super().__init__()
         self.db = gdb
@@ -33,6 +34,7 @@ class AddFrame(tk.Toplevel):
         self.btn_ok.bind('<Button-1>', self.safe_set)
 
     def safe_set(self, event):
+        """Безопасная передача данных в бд"""
         descr = self.entry_description.get()
         price = self.entry_money.get()
         if descr == '' or price == '':
@@ -49,6 +51,7 @@ class AddFrame(tk.Toplevel):
 
 
 class EditFrame(AddFrame):
+    """Окно редактирования товара"""
     def __init__(self, sel_id):
         super().__init__()
         self.sel_id = sel_id
@@ -62,6 +65,7 @@ class EditFrame(AddFrame):
         self.db.edit_record_db(descr, float(price), self.sel_id)
 
     def default_data(self):
+        """Подставление старых данных из бд"""
         self.db.default_data_db(self.sel_id)
         row = self.db.c.fetchone()
         self.entry_description.insert(0, row[1])
@@ -69,6 +73,7 @@ class EditFrame(AddFrame):
 
 
 class DelFrame(tk.Toplevel):
+    """Окно подтверждения удаления товара"""
     def __init__(self, sel_id):
         super().__init__()
         self.sel_id = sel_id
@@ -90,11 +95,12 @@ class DelFrame(tk.Toplevel):
 
     def ok_button(self):
         self.btn_ok = ttk.Button(self, text='Remove')
-        self.btn_ok.bind('<Button-1>', lambda event: [self.db.delete_records_db(self.sel_id),
+        self.btn_ok.bind('<Button-1>', lambda event: [self.db.del_record_db(self.sel_id),
                                                       self.destroy()])
 
 
 class AddToCartFrame(DelFrame):
+    """Окно подтверждения добавления товара в корзину"""
     def __init__(self, sel_id):
         super().__init__(sel_id)
         self.title('Cart+')
@@ -106,6 +112,7 @@ class AddToCartFrame(DelFrame):
 
 
 class RmFromCartFrame(DelFrame):
+    """Окно подтверждения удаления товара из корзины"""
     def __init__(self, sel_id):
         super().__init__(sel_id)
         self.title('Cart-')
@@ -117,6 +124,7 @@ class RmFromCartFrame(DelFrame):
 
 
 class CleanCart(DelFrame):
+    """Окно подтверждения очистки корзины"""
     def __init__(self):
         super().__init__(0)
         self.title('Clean Cart')
@@ -128,6 +136,7 @@ class CleanCart(DelFrame):
 
 
 class OrderFrame(tk.Toplevel):
+    """Окно подтверждения заказа"""
     def __init__(self, username):
         super().__init__()
         self.db = gdb
@@ -146,6 +155,7 @@ class OrderFrame(tk.Toplevel):
         self.focus_set()
 
     def order_info(self):
+        """Получение товаров из корзины"""
         self.db.show_cart_db()
         rows = self.db.c.fetchall()
         names, ids = [], []
@@ -180,6 +190,7 @@ class OrderFrame(tk.Toplevel):
         self.btn_ok.bind('<Button-1>', self.safe_order)
 
     def safe_order(self, event):
+        """Безопасное оформление заказа"""
         if self.goods_names == '':
             ms.showerror('Oops!', 'Cart is empty!')
         else:
@@ -192,6 +203,7 @@ class OrderFrame(tk.Toplevel):
 
 
 class ChangeStatusFrame(tk.Toplevel):
+    """Окно смены статуса заказа"""
     def __init__(self, sel_id):
         super().__init__()
         self.sel_id = sel_id
@@ -215,6 +227,7 @@ class ChangeStatusFrame(tk.Toplevel):
         self.btn_ok = ttk.Button(self, text='Update')
 
     def default_data(self):
+        """Получение информации о заказе из бд"""
         self.db.default_data_db(self.sel_id)
         row = self.db.c.fetchone()
         self.client_id = row[1]
@@ -234,6 +247,7 @@ class ChangeStatusFrame(tk.Toplevel):
 
 
 class RmOrderFrame(DelFrame):
+    """Окно подтверждения удаления заказа"""
     def __init__(self, sel_id):
         super().__init__(sel_id)
         self.db = odb
@@ -246,12 +260,13 @@ class RmOrderFrame(DelFrame):
 
 
 class ShowOrdersFrame(tk.Toplevel):
+    """Окно просмотра заказов"""
     def __init__(self, uid):
         super().__init__()
         self.uid = uid
         self.db = odb
-        self.tree = ttk.Treeview(self, columns=('ID', 'total', 'state'),
-                                 height=15, show='headings', selectmode="browse")
+        self.tree = ttk.Treeview(self, columns=('ID', 'total', 'state'), height=15, show='headings',
+                                 selectmode="browse")   # Дерево отображения заказов юзера
         self.scroll = tk.Scrollbar(self, command=self.tree.yview)
         self.init_child()
         self.title("My Orders")
@@ -275,6 +290,7 @@ class ShowOrdersFrame(tk.Toplevel):
         self.tree.configure(yscrollcommand=self.scroll.set)
 
     def get_data_by_user(self):
-        self.db.get_orders__by_username_db(self.uid)
+        """Передача данных о заказах из бд в дерево отображения"""
+        self.db.get_orders_by_username_db(self.uid)
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db.c.fetchall()]

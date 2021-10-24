@@ -2,6 +2,7 @@ from goodframes import *
 
 
 class DefaultButton(tk.Frame):
+    """Дефолтный конструктор кнопок"""
     def __init__(self, toolbar, text, command, image, side='l'):
         super().__init__(toolbar)
         btn_open_dialog = tk.Button(toolbar, text=text, command=command, bg='#d7d8e0', bd=0,
@@ -13,6 +14,7 @@ class DefaultButton(tk.Frame):
 
 
 class AddButton(DefaultButton):
+    """Кнопка добавления товара"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/add.png')
         super().__init__(toolbar=frame.toolbar,
@@ -22,6 +24,7 @@ class AddButton(DefaultButton):
 
 
 class DelButton(DefaultButton):
+    """Кнопка удаления товара"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/rm.png')
         self.frame = frame
@@ -31,6 +34,7 @@ class DelButton(DefaultButton):
                          image=self.img)
 
     def safe_del(self):
+        """Срабатывание только при выбранном товаре"""
         try:
             DelFrame(self.frame.get_sel_id())
         except:
@@ -38,6 +42,7 @@ class DelButton(DefaultButton):
 
 
 class EditGoodButton(DefaultButton):
+    """Кнопка редактирования товара"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/edit.png')
         self.frame = frame
@@ -47,6 +52,7 @@ class EditGoodButton(DefaultButton):
                          image=self.img)
 
     def safe_edit(self):
+        """Срабатывание только при выбранном товаре"""
         try:
             EditFrame(self.frame.get_sel_id())
         except:
@@ -63,6 +69,7 @@ class AddToCartButton(DefaultButton):
                          image=self.img)
 
     def safe_add_to_cart(self):
+        """Срабатывание только при выбранном товаре"""
         try:
             AddToCartFrame(self.frame.get_sel_id())
         except:
@@ -79,6 +86,7 @@ class RmFromCartButton(DefaultButton):
                          image=self.img)
 
     def safe_rm_from_cart(self):
+        """Срабатывание только при выбранном товаре"""
         try:
             RmFromCartFrame(self.frame.get_sel_id())
         except:
@@ -86,6 +94,7 @@ class RmFromCartButton(DefaultButton):
 
 
 class ShowCartButton(DefaultButton):
+    """Кнопка просмотр корзины"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/show-cart.png')
         self.frame = frame
@@ -96,6 +105,7 @@ class ShowCartButton(DefaultButton):
 
 
 class DelCartButton(DefaultButton):
+    """Кнопка очистки корзины"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/clean-cart.png')
         self.frame = frame
@@ -106,22 +116,18 @@ class DelCartButton(DefaultButton):
 
 
 class OrderButton(DefaultButton):
+    """Кнопка оформления заказа"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/order.png')
         super().__init__(frame.toolbar,
                          text='Order',
-                         command=lambda: self.safe_order(frame),
+                         command=lambda: OrderFrame(frame.session_username),
                          image=self.img,
                          side='r')
 
-    def safe_order(self, frame):
-        try:
-            OrderFrame(frame.session_username)
-        except:
-            pass
-
 
 class ShowOrdersButton(DefaultButton):
+    """Кнопка просмотр заказов юзера"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/sent.png')
         super().__init__(frame.toolbar,
@@ -132,6 +138,7 @@ class ShowOrdersButton(DefaultButton):
 
 
 class ChangeStateButton(DefaultButton):
+    """Кнопка смены статуса заказа"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/edit.png')
         self.frame = frame
@@ -141,6 +148,7 @@ class ChangeStateButton(DefaultButton):
                          image=self.img)
 
     def safe_change(self):
+        """Срабатывание только при выбранном заказе"""
         try:
             ChangeStatusFrame(self.frame.get_sel_id())
         except:
@@ -148,6 +156,7 @@ class ChangeStateButton(DefaultButton):
 
 
 class DelOrderButton(DefaultButton):
+    """Кнопка удаления заказа"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/rm.png')
         self.frame = frame
@@ -157,6 +166,7 @@ class DelOrderButton(DefaultButton):
                          image=self.img)
 
     def safe_del_order(self):
+        """Срабатывание только при выбранном заказе"""
         try:
             RmOrderFrame(self.frame.get_sel_id())
         except:
@@ -164,6 +174,7 @@ class DelOrderButton(DefaultButton):
 
 
 class UpdateButton(DefaultButton):
+    """Кнопка перезагрузки дерева отображения"""
     def __init__(self, frame):
         self.img = tk.PhotoImage(file='icons/updating.png')
         super().__init__(frame.toolbar,

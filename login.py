@@ -6,6 +6,7 @@ from app import RunApp
 
 
 class EnterFrame:
+    """Окно входа/регистрации"""
     def __init__(self, frame):
         self.frame = frame
         self.frame.title("Shop Login")
@@ -18,6 +19,7 @@ class EnterFrame:
         self.frame.mainloop()
 
     def login_frame(self):
+        """Виджеты логина"""
         head = tk.Label(self.logfr, text='LOGIN', font=('', 35), pady=10)
         head.grid(row=0, column=0, columnspan=2)
         label_username = tk.Label(self.logfr, text='Username: ')
@@ -50,6 +52,7 @@ class EnterFrame:
         self.register_frame()
 
     def register_frame(self):
+        """Виджеты регистрации"""
         head = tk.Label(self.regfr, text='REGISTRATION', font=('', 35),padx=5, pady=10)
         head.grid(row=0, column=0, columnspan=2)
         lbl_unm = tk.Label(self.regfr, text='Username: ')
