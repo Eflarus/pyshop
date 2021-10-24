@@ -116,7 +116,7 @@ class RmFromCartFrame(DelFrame):
                                                       self.destroy()])
 
 
-class clean_cart(DelFrame):
+class CleanCart(DelFrame):
     def __init__(self):
         super().__init__(0)
         self.title('Clean Cart')

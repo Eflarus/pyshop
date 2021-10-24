@@ -28,10 +28,10 @@ class EnterFrame:
         self.entry_username.grid(row=1, column=1, padx=20, pady=10)
         self.entry_password = ttk.Entry(self.logfr)
         self.entry_password.grid(row=2, column=1, padx=20, pady=10)
-        button_login = ttk.Button(self.logfr, text='Enter',
+        button_login = ttk.Button(self.logfr, text='Sign In',
                                   command=lambda: self.login(self.entry_username.get(), self.entry_password.get()))
         button_login.grid(row=3, column=0, padx=20, pady=10)
-        button_register = ttk.Button(self.logfr, text='Register', command=self.log_to_reg)
+        button_register = ttk.Button(self.logfr, text='Sign Up', command=self.log_to_reg)
         button_register.grid(row=3, column=1, padx=20, pady=10)
 
         self.logfr.pack()
@@ -66,7 +66,7 @@ class EnterFrame:
         self.cbox_umode.grid(row=3, column=1, padx=20, pady=10)
         self.cbox_umode.current(1)
         button_register = ttk.Button(self.regfr,
-                                     text='Create Account',
+                                     text='Sign Up',
                                      command=lambda: self.register(
                                          self.entry_username.get(), self.entry_password.get(), self.cbox_umode.get()))
         button_register.grid(row=4, column=0, padx=20, pady=30)

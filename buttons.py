@@ -101,7 +101,7 @@ class DelCartButton(DefaultButton):
         self.frame = frame
         super().__init__(frame.toolbar,
                          text='Clean Cart',
-                         command=lambda: clean_cart(),
+                         command=lambda: CleanCart(),
                          image=self.img)
 
 
