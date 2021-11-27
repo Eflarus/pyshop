@@ -14,7 +14,6 @@ class EnterFrame:
         self.regfr = tk.Frame(self.frame)
         self.logfr = tk.Frame(self.frame)
         self.db = udb
-        self.usermode = tk.StringVar
         self.login_frame()
         self.frame.mainloop()
 
